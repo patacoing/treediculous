@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "treediculous"
+version = "0.1.0"
+description = ""
+authors = ["patacoing <romain.lefebvre1104@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "1.26.2"
+opencv-python-headless = "^4.10.0.84"
+pillow = "^11.0.0"
+scikit-learn = "^1.6.0"
+
+[tool.poetry.group.macos]
+optional = true
+
+[tool.poetry.group.macos.dependencies]
+tensorflow-macos = "^2.16.2"
+tensorflow-metal = "^1.1.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+matplotlib = "^3.10.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

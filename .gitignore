@@ -1,0 +1,6 @@
+data/
+data_renamed/
+test/
+graph.png
+.DS_Store
+app/__pycache__/
