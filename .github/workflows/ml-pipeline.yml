@@ -9,6 +9,7 @@ env:
   PYTHON_VERSION: "3.10.15"
   DOCKER_REGISTRY: "ghcr.io"
   AZURE_WEBAPP_NAME: "treediculous-web"
+  AZURE_API_NAME: "treediculous-api"
   MODEL_NAME: "treediculous"
 
 permissions:
@@ -106,7 +107,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
-  build-deploy-image:
+  build-deploy-api-image:
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     runs-on: ubuntu-latest
     environment: treediculous
@@ -159,13 +160,38 @@ jobs:
           context: .
           file: api.Dockerfile
           push: true
-          tags: ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:${{ steps.get_model_version.outputs.model_version }}
+          tags: ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:api-${{ steps.get_model_version.outputs.model_version }}
+
+  build-deploy-web-image:
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    runs-on: ubuntu-latest
+    environment: treediculous
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GIT_TOKEN }}
+
+      - name: Push docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: webapp
+          file: Dockerfile
+          push: true
+          tags: ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:web
 
   deploy-to-azure:
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     runs-on: ubuntu-latest
     environment: treediculous
-    needs: build-deploy-image
+    needs:
+      - build-deploy-api-image
+      - build-deploy-web-image
 
     steps:
       - name: azure login
@@ -179,4 +205,5 @@ jobs:
       - name: Deploy container
         run: |
           MODEL_VERSION=$(az ml model list --workspace-name ${{ env.AZURE_WORKSPACE }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --name ${{ env.MODEL_NAME }} --query "max([*].version).to_number(@)")
-          az container create --resource-group ${{ env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_WEBAPP_NAME }} --dns-name-label ${{ env.AZURE_WEBAPP_NAME }} --image ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:$MODEL_VERSION --ports 8000 --os-type Linux --cpu 1 --memory 2
+          az container create --resource-group ${{ env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_API_NAME }} --dns-name-label ${{ env.AZURE_API_NAME }} --image ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:api-$MODEL_VERSION --ports 8000 --os-type Linux --cpu 1 --memory 2
+          az container create --resource-group ${{ env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_WEBAPP_NAME }} --dns-name-label ${{ env.AZURE_WEBAPP_NAME }} --image ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:web --ports 80 --os-type Linux --cpu 1 --memory 1
