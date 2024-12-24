@@ -1,0 +1,14 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: api.Dockerfile
+    ports:
+      - "8000:8000"
+
+  web:
+    build:
+      context: webapp
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"

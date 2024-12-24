@@ -12,7 +12,7 @@ RUN python -m venv /venv
 
 COPY poetry.lock pyproject.toml ./
 
-RUN . /venv/bin/activate && poetry install -n --sync --no-directory --no-root --group api && poetry run pip install setuptools
+RUN . /venv/bin/activate && poetry install -n --sync --no-directory --no-root --with api && poetry run pip install setuptools
 
 
 FROM base AS final
