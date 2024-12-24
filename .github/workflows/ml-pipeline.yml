@@ -179,10 +179,9 @@ jobs:
 
       - name: Push docker image
         uses: docker/build-push-action@v4
-        working-directory: webapp
         with:
-          context: .
-          file: Dockerfile
+          context: webapp
+          file: webapp/Dockerfile
           push: true
           tags: ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:web
 
