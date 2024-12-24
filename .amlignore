@@ -2,6 +2,6 @@ data/
 data_renamed/
 test/
 graph.png
-.DS_Store
-app/__pycache__/
+data.zip
+project-*
 act.secrets

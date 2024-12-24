@@ -11,6 +11,10 @@ numpy = "1.26.2"
 opencv-python-headless = "^4.10.0.84"
 pillow = "^11.0.0"
 scikit-learn = "^1.6.0"
+azure-ai-ml = "^1.23.0"
+azure-identity = "^1.19.0"
+keras = "^3.7.0"
+tensorflow = "2.16.2"
 
 [tool.poetry.group.macos]
 optional = true
