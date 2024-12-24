@@ -1,3 +1,15 @@
+## 0.3.0 (2024-12-24)
+
+### Feat
+
+- **ci-cd**: build push and deploy frontend
+
+### Fix
+
+- **ci-cd**: set dir in web deployment
+- **ci-cd**: set working directory of the step
+- **ci-cd**: add no-cache
+
 ## 0.2.1 (2024-12-24)
 
 ### Fix

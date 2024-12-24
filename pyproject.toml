@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "treediculous"
-version = "0.2.1"
+version = "0.3.0"
 description = ""
 authors = ["patacoing <romain.lefebvre1104@gmail.com>"]
 readme = "README.md"
