@@ -1,3 +1,9 @@
+## 0.3.1 (2024-12-24)
+
+### Fix
+
+- copy css config to dockerfile
+
 ## 0.3.0 (2024-12-24)
 
 ### Feat
