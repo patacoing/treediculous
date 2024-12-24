@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import numpy as np
 from keras import Sequential
 from keras.src.callbacks import History
@@ -61,20 +63,20 @@ class Model:
 
     def predict(self, image: np.array, verbose: int = 0) -> tuple[list[float], str]:
         image_preprocessed = self._preprocess_image(image)
-        predictions = self.model.predict(image_preprocessed.reshape(1, 300, 300, 3), verbose=verbose)[0]
+        prediction = self.model.predict(image_preprocessed.reshape(1, 224, 224, 3), verbose=verbose)[0][0]
 
-        return predictions, self.labels[np.argmax(predictions)]
+        return prediction, self.labels[int(prediction > 0.5)]
 
 
-# model = Model(["ugly", "nice"])
-# model_path = Path(__file__).resolve().parent / "model" / "treediculous.keras"
-# if model_path.exists():
-#     model.load(model_path)
-# else:
-#     print("Model not found")
-#
-# def get_model() -> Model:
-#     return model
-#
-# def get_labels() -> list[str]:
-#     return model.labels
+model = Model(["ugly", "nice"])
+model_path = Path(__file__).resolve().parent / "model" / "treediculous.keras"
+if model_path.exists():
+    model.load(model_path)
+else:
+    print("Model not found")
+
+def get_model() -> Model:
+    return model
+
+def get_labels() -> list[str]:
+    return model.labels

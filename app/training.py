@@ -68,6 +68,7 @@ class Training(ITraining):
             batch_size=batch_size,
             validation_data=(self.test_x, self.test_y),
             callbacks=[earlystopping],
+            verbose=2
         )
 
         return model, history

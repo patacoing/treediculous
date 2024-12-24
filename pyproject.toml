@@ -28,6 +28,12 @@ tensorflow-metal = "^1.1.0"
 pytest = "^8.3.4"
 matplotlib = "^3.10.0"
 
+[tool.poetry.group.api]
+optional = true
+
+[tool.poetry.group.api.dependencies]
+fastapi = {extras = ["standard"], version = "^0.115.6"}
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
