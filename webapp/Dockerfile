@@ -8,6 +8,8 @@ RUN npm ci
 COPY src src
 COPY index.html index.html
 COPY vite.config.js vite.config.js
+COPY postcss.config.js postcss.config.js
+COPY tailwind.config.js tailwind.config.js
 RUN npm run build
 
 FROM nginx:alpine
