@@ -10,7 +10,6 @@ env:
   DOCKER_REGISTRY: "ghcr.io"
   AZURE_WEBAPP_NAME: "treediculous-web"
   MODEL_NAME: "treediculous"
-  ENVIRONMENT: "treediculous"
 
 permissions:
   contents: write
@@ -19,7 +18,7 @@ jobs:
   ml-pipeline:
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     runs-on: ubuntu-latest
-    environment: ${{ env.ENVIRONMENT }}
+    environment: treediculous
 
     steps:
     - uses: actions/checkout@v4
@@ -54,7 +53,7 @@ jobs:
   release:
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     runs-on: ubuntu-latest
-    environment: ${{ env.ENVIRONMENT }}
+    environment: treediculous
 
     steps:
       - uses: actions/checkout@v4
@@ -109,7 +108,7 @@ jobs:
   build-deploy-image:
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     runs-on: ubuntu-latest
-    environment: ${{ env.ENVIRONMENT }}
+    environment: treediculous
 
     steps:
       - uses: actions/checkout@v4
@@ -164,7 +163,7 @@ jobs:
   deploy-to-azure:
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     runs-on: ubuntu-latest
-    environment: ${{ env.ENVIRONMENT }}
+    environment: treediculous
     needs: build-deploy-image
 
     steps:
