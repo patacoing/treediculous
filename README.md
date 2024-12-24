@@ -28,3 +28,9 @@ a Xmas tree as `ugly` or `nice` is purely subjective and depends on the annotato
 ## Annotation tool
 
 label-studio
+
+
+## Tech stack
+
+- API : FastAPI
+- Frontend : React
