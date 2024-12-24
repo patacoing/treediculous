@@ -16,6 +16,7 @@ SECRET_FILE="act.secrets"
 GH_SECRET=false
 GH_ENV="treediculous"
 OPTSTRING="gh"
+GIT_TOKEN=$(gh auth token)
 
 while getopts ${OPTSTRING} opt; do
   case ${opt} in
@@ -46,8 +47,10 @@ formatted_credentials=$(echo $credentials | jq -c @json | tr -d "\\" | sed -r 's
 if [ "$GH_SECRET" = true ]; then
   gh secret set AZURE_CREDENTIALS --body "$formatted_credentials" --env "$GH_ENV"
   gh secret set AZURE_SUBSCRIPTION_ID --body "$SUBSCRIPTION_ID" --env "$GH_ENV"
+  gh secret set GIT_TOKEN --body "$GIT_TOKEN" --env "$GH_ENV"
 fi
 
 echo "AZURE_CREDENTIALS=$formatted_credentials" > $SECRET_FILE
 echo "AZURE_SUBSCRIPTION_ID=$SUBSCRIPTION_ID" >> $SECRET_FILE
+echo "GIT_TOKEN=$GIT_TOKEN" >> $SECRET_FILE
 echo "Secrets saved in $SECRET_FILE"

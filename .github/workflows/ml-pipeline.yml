@@ -1,0 +1,182 @@
+name: ML Pipeline
+on:
+  push:
+
+env:
+  AZURE_RESOURCE_GROUP: "treediculous-grp"
+  AZURE_WORKSPACE: "treediculous-ml-grp"
+  AZURE_LOCATION: "northeurope"
+  PYTHON_VERSION: "3.10.15"
+  DOCKER_REGISTRY: "ghcr.io"
+  AZURE_WEBAPP_NAME: "treediculous-web"
+  MODEL_NAME: "treediculous"
+  ENVIRONMENT: "treediculous"
+
+permissions:
+  contents: write
+
+jobs:
+  ml-pipeline:
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    runs-on: ubuntu-latest
+    environment: ${{ env.ENVIRONMENT }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install dependencies
+      run: |
+          python -m pip install --upgrade pip
+          python -m pip install poetry
+          poetry install
+
+    - name: azure login
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}}
+
+    - name: Install Azure CLI ML extension
+      run: az extension add --name ml
+
+    - name: setup azure
+      working-directory: pipeline
+      run: ./setup_azureml.sh ${{ secrets.AZURE_SUBSCRIPTION_ID }} ${{ env.AZURE_RESOURCE_GROUP }} ${{ env.AZURE_WORKSPACE }} ${{ env.AZURE_LOCATION }}
+
+    - name: Run pipeline
+      working-directory: pipeline
+      run: ./run_azureml.sh ${{ secrets.AZURE_SUBSCRIPTION_ID }} ${{ env.AZURE_RESOURCE_GROUP }} ${{ env.AZURE_WORKSPACE }} ${{ env.AZURE_LOCATION }}
+
+  release:
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    runs-on: ubuntu-latest
+    environment: ${{ env.ENVIRONMENT }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch tags
+        run: git fetch --tags
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install poetry
+          poetry install
+
+      - name: azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+
+      - name: Install Azure CLI ML extension
+        run: az extension add --name ml
+
+      - name: Download model
+        working-directory: pipeline
+        env:
+          DOWNLOAD_PATH: "../app"
+        run: ./run_download_model.sh latest ${{ env.AZURE_RESOURCE_GROUP }} ${{ env.AZURE_WORKSPACE }} ${{ env.AZURE_LOCATION }} ${{ secrets.AZURE_SUBSCRIPTION_ID }} ${{ env.DOWNLOAD_PATH }}
+
+      - name: Create bump and changelog
+        id: cz
+        uses: commitizen-tools/commitizen-action@master
+        with:
+          github_token: ${{ secrets.GIT_TOKEN }}
+          changelog_increment_filename: body.md
+          push: true
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: body.md
+          tag_name: ${{ env.REVISION }}
+          files: app/model/${{ env.MODEL_NAME }}.keras
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+
+  build-deploy-image:
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    runs-on: ubuntu-latest
+    environment: ${{ env.ENVIRONMENT }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install poetry
+          poetry install
+
+      - name: azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GIT_TOKEN }}
+
+      - name: Install Azure CLI ML extension
+        run: az extension add --name ml
+
+      - name: Download latest model
+        working-directory: pipeline
+        env:
+          DOWNLOAD_PATH: "../app"
+        run: ./run_download_model.sh latest ${{ env.AZURE_RESOURCE_GROUP }} ${{ env.AZURE_WORKSPACE }} ${{ env.AZURE_LOCATION }} ${{ secrets.AZURE_SUBSCRIPTION_ID }} ${{ env.DOWNLOAD_PATH }}
+
+      - name: Get the model version
+        id: get_model_version
+        run: |
+          MODEL_VERSION=$(cat app/model/model_version)
+          echo "model_version=$MODEL_VERSION"
+          echo "model_version=$MODEL_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Push docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: api.Dockerfile
+          push: true
+          tags: ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:${{ steps.get_model_version.outputs.model_version }}
+
+  deploy-to-azure:
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    runs-on: ubuntu-latest
+    environment: ${{ env.ENVIRONMENT }}
+    needs: build-deploy-image
+
+    steps:
+      - name: azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+
+      - name: Install Azure CLI ML extension
+        run: az extension add --name ml
+
+      - name: Deploy container
+        run: |
+          MODEL_VERSION=$(az ml model list --workspace-name ${{ env.AZURE_WORKSPACE }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --name ${{ env.MODEL_NAME }} --query "max([*].version).to_number(@)")
+          az container create --resource-group ${{ env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_WEBAPP_NAME }} --dns-name-label ${{ env.AZURE_WEBAPP_NAME }} --image ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:$MODEL_VERSION --ports 8000 --os-type Linux --cpu 1 --memory 2
