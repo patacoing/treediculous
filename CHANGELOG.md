@@ -1,3 +1,9 @@
+## 0.2.1 (2024-12-24)
+
+### Fix
+
+- **ci-cd**: set packages permissions to write
+
 ## 0.2.0 (2024-12-24)
 
 ### Feat
