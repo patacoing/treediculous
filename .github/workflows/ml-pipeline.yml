@@ -161,6 +161,7 @@ jobs:
           file: api.Dockerfile
           push: true
           tags: ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:api-${{ steps.get_model_version.outputs.model_version }}
+          no-cache: true
 
   build-deploy-web-image:
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
@@ -184,6 +185,7 @@ jobs:
           file: Dockerfile
           push: true
           tags: ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:web
+          no-cache: true
 
   deploy-to-azure:
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
