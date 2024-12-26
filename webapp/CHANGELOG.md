@@ -1,3 +1,9 @@
+## web-0.3.2 (2024-12-26)
+
+### Fix
+
+- **ci**: wrong var name to get tag
+
 ## web-0.3.1 (2024-12-26)
 
 ### Fix
