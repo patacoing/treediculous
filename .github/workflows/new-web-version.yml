@@ -1,0 +1,48 @@
+on:
+  push:
+    tags:
+      - "web-*"
+
+env:
+  AZURE_RESOURCE_GROUP: "treediculous-grp"
+  DOCKER_REGISTRY: "ghcr.io"
+  AZURE_WEBAPP_NAME: "treediculous-web"
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-push-web-docker-image:
+    runs-on: ubuntu-latest
+    environment: treediculous
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GIT_TOKEN }}
+
+      - name: Push docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: webapp
+          file: webapp/Dockerfile
+          push: true
+          tags: ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:${{ github.ref }}
+
+  deploy-web:
+    runs-on: ubuntu-latest
+    environment: treediculous
+    needs: build-push-web-docker-image
+    steps:
+      - name: azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+
+      - name: Deploy container
+        run: az container create --resource-group ${{ env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_WEBAPP_NAME }} --dns-name-label ${{ env.AZURE_WEBAPP_NAME }} --image ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:${{ github.ref }} --ports 80 --os-type Linux --cpu 1 --memory 1

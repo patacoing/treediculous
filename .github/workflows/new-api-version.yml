@@ -1,0 +1,77 @@
+on:
+  push:
+    tags:
+      - "api-*"
+
+env:
+  AZURE_RESOURCE_GROUP: "treediculous-grp"
+  AZURE_WORKSPACE: "treediculous-ml-grp"
+  AZURE_LOCATION: "northeurope"
+  PYTHON_VERSION: "3.10.15"
+  DOCKER_REGISTRY: "ghcr.io"
+  AZURE_API_NAME: "treediculous-api"
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-push-api-docker-image:
+    runs-on: ubuntu-latest
+    environment: treediculous
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install poetry
+          poetry install
+
+      - name: azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GIT_TOKEN }}
+
+      - name: Install Azure CLI ML extension
+        run: az extension add --name ml
+
+      - name: Download latest model
+        working-directory: pipeline
+        env:
+          DOWNLOAD_PATH: "../app"
+        run: ./run_download_model.sh latest ${{ env.AZURE_RESOURCE_GROUP }} ${{ env.AZURE_WORKSPACE }} ${{ env.AZURE_LOCATION }} ${{ secrets.AZURE_SUBSCRIPTION_ID }} ${{ env.DOWNLOAD_PATH }}
+
+      - name: Push docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: api.Dockerfile
+          push: true
+          tags: ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:${{ github.ref }}
+
+  deploy-api:
+    runs-on: ubuntu-latest
+    environment: treediculous
+    needs: build-push-api-docker-image
+
+    steps:
+      - name: azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+
+      - name: Deploy container
+        run: az container create --resource-group ${{ env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_API_NAME }} --dns-name-label ${{ env.AZURE_API_NAME }} --image ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:${{ github.ref }} --ports 8000 --os-type Linux --cpu 1 --memory 2
