@@ -18,6 +18,8 @@ jobs:
     environment: treediculous
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
