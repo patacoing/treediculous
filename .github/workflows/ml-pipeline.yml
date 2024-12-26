@@ -52,61 +52,6 @@ jobs:
       working-directory: pipeline
       run: ./run_azureml.sh ${{ secrets.AZURE_SUBSCRIPTION_ID }} ${{ env.AZURE_RESOURCE_GROUP }} ${{ env.AZURE_WORKSPACE }} ${{ env.AZURE_LOCATION }}
 
-  release:
-    if: "!startsWith(github.event.head_commit.message, 'bump:')"
-    runs-on: ubuntu-latest
-    environment: treediculous
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Fetch tags
-        run: git fetch --tags
-
-      - name: Set up Python ${{ env.PYTHON_VERSION }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install poetry
-          poetry install
-
-      - name: azure login
-        uses: azure/login@v1
-        with:
-          creds: ${{secrets.AZURE_CREDENTIALS}}
-
-      - name: Install Azure CLI ML extension
-        run: az extension add --name ml
-
-      - name: Download model
-        working-directory: pipeline
-        env:
-          DOWNLOAD_PATH: "../app"
-        run: ./run_download_model.sh latest ${{ env.AZURE_RESOURCE_GROUP }} ${{ env.AZURE_WORKSPACE }} ${{ env.AZURE_LOCATION }} ${{ secrets.AZURE_SUBSCRIPTION_ID }} ${{ env.DOWNLOAD_PATH }}
-
-      - name: Create bump and changelog
-        id: cz
-        uses: commitizen-tools/commitizen-action@master
-        with:
-          github_token: ${{ secrets.GIT_TOKEN }}
-          changelog_increment_filename: body.md
-          push: true
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          body_path: body.md
-          tag_name: ${{ env.REVISION }}
-          files: app/model/${{ env.MODEL_NAME }}.keras
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-
   build-deploy-api-image:
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     runs-on: ubuntu-latest

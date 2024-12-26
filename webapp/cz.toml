@@ -1,7 +1,7 @@
 [tool.commitizen]
 name = "cz_conventional_commits"
-tag_format = "api-$version"
+tag_format = "web-$version"
 version_scheme = "semver"
-version_provider = "poetry"
+version_provider = "npm"
 update_changelog_on_bump = true
 major_version_zero = true
