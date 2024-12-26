@@ -6,6 +6,7 @@ COPY package-lock.json package-lock.json
 RUN npm ci
 
 COPY src src
+COPY public public
 COPY index.html index.html
 COPY vite.config.js vite.config.js
 COPY postcss.config.js postcss.config.js
