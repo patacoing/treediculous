@@ -1,3 +1,9 @@
+## web-0.4.1 (2024-12-26)
+
+### Fix
+
+- **deployment**: copy public to docker image
+
 ## web-0.4.0 (2024-12-26)
 
 ### Feat
