@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ github.ref_name }}
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -34,7 +34,7 @@ jobs:
           context: webapp
           file: webapp/Dockerfile
           push: true
-          tags: ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:${{ github.ref }}
+          tags: ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:${{ github.ref_name }}
 
   deploy-web:
     runs-on: ubuntu-latest
@@ -47,4 +47,4 @@ jobs:
           creds: ${{secrets.AZURE_CREDENTIALS}}
 
       - name: Deploy container
-        run: az container create --resource-group ${{ env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_WEBAPP_NAME }} --dns-name-label ${{ env.AZURE_WEBAPP_NAME }} --image ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:${{ github.ref }} --ports 80 --os-type Linux --cpu 1 --memory 1
+        run: az container create --resource-group ${{ env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_WEBAPP_NAME }} --dns-name-label ${{ env.AZURE_WEBAPP_NAME }} --image ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:${{ github.ref_name }} --ports 80 --os-type Linux --cpu 1 --memory 1
