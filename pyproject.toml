@@ -15,6 +15,7 @@ azure-ai-ml = "^1.23.0"
 azure-identity = "^1.19.0"
 keras = "^3.7.0"
 tensorflow = "2.16.2"
+imbalanced-learn = "^0.13.0"
 
 [tool.poetry.group.macos]
 optional = true

@@ -34,3 +34,7 @@ label-studio
 
 - API : FastAPI
 - Frontend : React
+
+## TODO
+
+- store images in a cloud storage and manage infrastructure with terraform

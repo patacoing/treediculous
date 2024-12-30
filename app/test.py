@@ -1,7 +1,9 @@
 from pathlib import Path
 
+import numpy as np
 from PIL import Image
 from matplotlib import pyplot as plt
+from sklearn.metrics import confusion_matrix
 
 from app.image_loader import ImageLoader, load_labels_from_annotation_file
 from app.model import Model
@@ -10,6 +12,7 @@ from app.splitter import Splitter
 
 image_Loader = ImageLoader(path="data_renamed/")
 # image_Loader.rename("data_renamed/")
+# exit()
 
 
 
@@ -18,7 +21,7 @@ images, filenames = image_Loader.load()
 preprocessing = OpenCvPreprocessing(images)
 images = preprocessing.preprocess()
 
-labels = load_labels_from_annotation_file("project-1-at-2024-12-23-22-37-9b90e95a.json", filenames)
+labels = load_labels_from_annotation_file("project-1-at-2024-12-28-13-38-0d340661.json", filenames)
 
 # images = (images * IPreprocessing.NORMALIZATION).astype("uint8")
 # for image, filename in zip(images, filenames):
@@ -32,7 +35,7 @@ mapping = {
 
 
 splitter = Splitter(images, list(map(lambda label: mapping[label], labels)))
-splitter.split(0.8)
+splitter.split(0.7)
 
 train_x, test_x, train_y, test_y = splitter.train_x, splitter.test_x, splitter.train_y, splitter.test_y
 
@@ -71,6 +74,7 @@ with open(f"{test_labels_input}/labels.txt", "w") as file:
 print("labels saved")
 
 model = Model(mapping.keys())
+
 nb_epochs = 100
 
 history = model.train(
@@ -78,9 +82,19 @@ history = model.train(
     Path(train_images_input),
     Path(f"{test_labels_input}/labels.txt"),
     Path(test_images_input),
-    nb_batch_size=32,
+    nb_batch_size=4,
     nb_epochs=nb_epochs,
 )
+
+#TODO: rename et annoter les nouvelles images
+#TODO: il faut vraiment des règles d'annotation précises
+
+y_pred = model.model.predict(test_x)
+
+print(y_pred)
+print(test_y)
+confusion_matrix = confusion_matrix(test_y, np.argmax(y_pred, axis=1))
+print(confusion_matrix)
 
 plt.plot(range(len(history.history["loss"])), history.history['loss'], color = 'blue', label="loss")
 plt.plot(range(len(history.history["val_loss"])), history.history['val_loss'], color = 'green', label="val_loss")
@@ -88,3 +102,11 @@ plt.xlabel("Epoch")
 plt.ylabel("loss / Val loss")
 plt.legend()
 plt.savefig("graph.png")
+plt.clf()
+
+plt.plot(range(len(history.history["accuracy"])), history.history['accuracy'], color = 'blue', label="accuracy")
+plt.plot(range(len(history.history["val_accuracy"])), history.history['val_accuracy'], color = 'green', label="val_accuracy")
+plt.xlabel("Epoch")
+plt.ylabel("accuracy / Val accuracy")
+plt.legend()
+plt.savefig("graph_accuracy.png")

@@ -48,8 +48,8 @@ class Model:
 
         train_x, train_y, test_x, test_y = train_images, train_labels, test_images, test_labels
 
-        training = Training(train_x, train_y, test_x, test_y, 1)
-        model, history = training.train(epochs=nb_epochs, batch_size=nb_batch_size, num_classes=1)
+        training = Training(train_x, train_y, test_x, test_y, 2)
+        model, history = training.train(epochs=nb_epochs, batch_size=nb_batch_size, num_classes=2)
 
         self.model = model
 
