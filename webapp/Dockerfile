@@ -13,5 +13,6 @@ COPY postcss.config.js postcss.config.js
 COPY tailwind.config.js tailwind.config.js
 RUN npm run build
 
-FROM nginx:alpine
-COPY --from=build /build/dist/ /usr/share/nginx/html
+FROM caddy:latest
+COPY --from=build /build/dist/ /srv/
+COPY Caddyfile /etc/caddy/Caddyfile

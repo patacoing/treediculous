@@ -35,16 +35,3 @@ jobs:
           file: webapp/Dockerfile
           push: true
           tags: ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:${{ github.ref_name }}
-
-  deploy-web:
-    runs-on: ubuntu-latest
-    environment: treediculous
-    needs: build-push-web-docker-image
-    steps:
-      - name: azure login
-        uses: azure/login@v2
-        with:
-          creds: ${{secrets.AZURE_CREDENTIALS}}
-
-      - name: Deploy container
-        run: az container create --resource-group ${{ env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_WEBAPP_NAME }} --dns-name-label ${{ env.AZURE_WEBAPP_NAME }} --image ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:${{ github.ref_name }} --ports 80 --os-type Linux --cpu 1 --memory 1
