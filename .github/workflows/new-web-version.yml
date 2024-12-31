@@ -7,10 +7,12 @@ env:
   AZURE_RESOURCE_GROUP: "treediculous-grp"
   DOCKER_REGISTRY: "ghcr.io"
   AZURE_WEBAPP_NAME: "treediculous-web"
+  TERRAFORM_VERSION: "1.5.7"
 
 permissions:
   contents: write
   packages: write
+  issues: write
 
 jobs:
   build-push-web-docker-image:
@@ -35,3 +37,47 @@ jobs:
           file: webapp/Dockerfile
           push: true
           tags: ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:${{ github.ref_name }}
+
+  deploy-web:
+    runs-on: ubuntu-latest
+    environment: treediculous
+    needs: build-push-web-docker-image
+
+    steps:
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - uses: azure/login@v2
+        with:
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        id: terraform_plan
+        working-directory: deployment
+        run: |
+          export TF_VAR_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          export TF_VAR_api_version=$(git describe --tags --abbrev=0 --match "api-*")
+          export TF_VAR_web_version=${{ github.ref_name }}
+          export TF_VAR_ovh_application_key=${{ secrets.OVH_APPLICATION_KEY }}
+          export TF_VAR_ovh_application_secret=${{ secrets.OVH_APPLICATION_SECRET }}
+          export TF_VAR_ovh_consumer_key=${{ secrets.OVH_CONSUMER_KEY }}
+          
+          terraform plan -out=tfplan
+          echo "plan=$(cat tfplan)" >> $GITHUB_ENV
+
+      - uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ secrets.GIT_TOKEN }}
+          approvers: patacoing
+          minimum-approvals: 1
+          issue-title: "Deploying new version of web"
+          issue-body: "Review the terraform plan, then approve or deny the deployment of the new web version. \n\n ${{ steps.terraform_plan.outputs.plan }}"
+          exclude-workflow-initiator-as-approver: false
+
+      - name: Terraform Apply
+        working-directory: deployment
+        run: terraform apply -auto-approve tfplan
