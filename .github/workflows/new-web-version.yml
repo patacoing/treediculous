@@ -44,6 +44,10 @@ jobs:
     needs: build-push-web-docker-image
 
     steps:
+      - uses: actions/checkout@v4
+        with:
+        ref: ${{ github.ref_name }}
+
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
