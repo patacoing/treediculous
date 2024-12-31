@@ -53,6 +53,7 @@ jobs:
           creds: ${{secrets.AZURE_CREDENTIALS}}
 
       - name: Terraform Init
+        working-directory: deployment
         run: terraform init
 
       - name: Terraform Plan
