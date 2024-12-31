@@ -92,6 +92,10 @@ resource "azurerm_container_group" "this" {
     ports {
       port = 80
     }
+
+    ports {
+      port = 443
+    }
   }
 
   container {
@@ -103,6 +107,14 @@ resource "azurerm_container_group" "this" {
     ports {
       port = 8000
     }
+  }
+
+  exposed_port {
+    port = 80
+  }
+
+  exposed_port {
+    port = 443
   }
 }
 
