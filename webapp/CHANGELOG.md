@@ -1,3 +1,9 @@
+## web-0.6.1 (2024-12-31)
+
+### Fix
+
+- **ci**: set working directory
+
 ## web-0.6.0 (2024-12-31)
 
 ### Feat
