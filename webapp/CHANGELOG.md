@@ -1,3 +1,9 @@
+## web-0.6.0 (2024-12-31)
+
+### Feat
+
+- **deployment**: added terraform and https
+
 ## web-0.5.0 (2024-12-31)
 
 ### Feat
