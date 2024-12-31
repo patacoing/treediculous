@@ -8,7 +8,7 @@ function App() {
   const [imagePreview, setImagePreview] = useState(null);
   const [response, setResponse] = useState(null);
 
-  const API_URL = "http://backend.treediculous.fr:8000/infer/treediculous";
+  const API_URL = "https://backend.treediculous.fr/infer/treediculous";
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];

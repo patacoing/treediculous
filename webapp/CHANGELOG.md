@@ -1,3 +1,13 @@
+## web-0.5.0 (2024-12-31)
+
+### Feat
+
+- **deployment**: added terraform
+
+### Fix
+
+- uses caddy
+
 ## web-0.4.1 (2024-12-26)
 
 ### Fix

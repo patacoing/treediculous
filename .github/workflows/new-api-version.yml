@@ -10,10 +10,12 @@ env:
   PYTHON_VERSION: "3.10.15"
   DOCKER_REGISTRY: "ghcr.io"
   AZURE_API_NAME: "treediculous-api"
+  TERRAFORM_VERSION: "1.5.7"
 
 permissions:
   contents: write
   packages: write
+  issues: write
 
 jobs:
   build-push-api-docker-image:
@@ -70,10 +72,41 @@ jobs:
     needs: build-push-api-docker-image
 
     steps:
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
       - name: azure login
         uses: azure/login@v2
         with:
           creds: ${{secrets.AZURE_CREDENTIALS}}
 
-      - name: Deploy container
-        run: az container create --resource-group ${{ env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_API_NAME }} --dns-name-label ${{ env.AZURE_API_NAME }} --image ${{ env.DOCKER_REGISTRY }}/patacoing/treediculous:${{ github.ref_name }} --ports 8000 --os-type Linux --cpu 1 --memory 2
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        id: terraform_plan
+        working-directory: deployment
+        run: |
+          export TF_VAR_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          export TF_VAR_api_version=${{ github.ref_name }}
+          export TF_VAR_web_version=$(git describe --tags --abbrev=0 --match "web-*")
+          export TF_VAR_ovh_application_key=${{ secrets.OVH_APPLICATION_KEY }}
+          export TF_VAR_ovh_application_secret=${{ secrets.OVH_APPLICATION_SECRET }}
+          export TF_VAR_ovh_consumer_key=${{ secrets.OVH_CONSUMER_KEY }}
+
+          terraform plan -no-color > tfplan
+          echo "plan=$(cat tfplan)" >> $GITHUB_ENV
+
+      - uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ secrets.GIT_TOKEN }}
+          approvers: patacoing
+          minimum-approvals: 1
+          issue-title: "Deploying new version of api"
+          issue-body: "Review the terraform plan, then approve or deny the deployment of the new api version. \n\n ${{ steps.terraform_plan.outputs.plan }}"
+          exclude-workflow-initiator-as-approver: false
+
+      - name: Terraform Apply
+        working-directory: deployment
+        run: terraform apply -auto-approve tfplan

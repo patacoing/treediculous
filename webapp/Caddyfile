@@ -1,0 +1,9 @@
+treediculous.fr {
+    root * /srv
+    file_server
+    encode gzip
+}
+
+backend.treediculous.fr {
+    reverse_proxy localhost:8000
+}

@@ -1,0 +1,6 @@
+subscription_id        = "subscription_id"
+api_version            = "api-0.3.2"
+web_version            = "web-0.4.1"
+ovh_application_key    = "app_key"
+ovh_application_secret = "app_secret"
+ovh_consumer_key       = "consumer_key"
