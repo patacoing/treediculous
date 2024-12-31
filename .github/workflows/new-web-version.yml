@@ -66,7 +66,7 @@ jobs:
           export TF_VAR_ovh_application_secret=${{ secrets.OVH_APPLICATION_SECRET }}
           export TF_VAR_ovh_consumer_key=${{ secrets.OVH_CONSUMER_KEY }}
           
-          terraform plan -out=tfplan
+          terraform plan -no-color > tfplan
           echo "plan=$(cat tfplan)" >> $GITHUB_ENV
 
       - uses: trstringer/manual-approval@v1
