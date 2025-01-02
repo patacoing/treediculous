@@ -68,8 +68,8 @@ jobs:
           echo "ARM_TENANT_ID=$(echo "$AZURE_CREDENTIALS" | jq -r ".tenantId")" >> $GITHUB_ENV
           
           echo "TF_VAR_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
-          echo "TF_VAR_api_version=api-0.3.2" >> $GITHUB_ENV
-          echo "TF_VAR_web_version=web-0.6.3" >> $GITHUB_ENV
+          echo "TF_VAR_api_version=$(git describe --tags --match="api-*" HEAD --abbrev=0)" >> $GITHUB_ENV
+          echo "TF_VAR_web_version=${{ github.ref_name }}" >> $GITHUB_ENV
           echo "TF_VAR_ovh_application_key=${{ secrets.OVH_APPLICATION_KEY }}" >> $GITHUB_ENV
           echo "TF_VAR_ovh_application_secret=${{ secrets.OVH_APPLICATION_SECRET }}" >> $GITHUB_ENV
           echo "TF_VAR_ovh_consumer_key=${{ secrets.OVH_CONSUMER_KEY }}" >> $GITHUB_ENV
