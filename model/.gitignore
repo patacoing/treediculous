@@ -1,0 +1,7 @@
+data/
+data_renamed/
+data_output/
+test/
+graph.png
+graph_accuracy.png
+.DS_Store

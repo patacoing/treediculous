@@ -23,7 +23,7 @@ ENV PATH=/venv/bin:${PATH}
 WORKDIR /app
 
 COPY --from=builder /venv /venv
-COPY ./app ./app
+COPY app ./app
 
 EXPOSE 8000
 

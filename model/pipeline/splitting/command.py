@@ -31,7 +31,7 @@ mapping = {
     "ugly": 0,
     "nice": 1
 }
-labels = load_labels_from_annotation_file(f"{labels_input}/project-1-at-2024-12-23-22-37-9b90e95a.json", filenames)
+labels = load_labels_from_annotation_file(f"{labels_input}/project-1-at-2024-12-28-13-38-0d340661.json", filenames)
 print("labels loaded")
 
 print("splitting data")

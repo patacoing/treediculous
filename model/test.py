@@ -3,13 +3,14 @@ from pathlib import Path
 from PIL import Image
 from matplotlib import pyplot as plt
 
-from app.image_loader import ImageLoader, load_labels_from_annotation_file
-from app.model import Model
-from app.preprocessing import OpenCvPreprocessing, IPreprocessing
-from app.splitter import Splitter
+from model.app.image_loader import ImageLoader, load_labels_from_annotation_file
+from model.app.model import Model
+from model.app.preprocessing import OpenCvPreprocessing, IPreprocessing
+from model.app.splitter import Splitter
 
-image_Loader = ImageLoader(path="data_renamed/")
-# image_Loader.rename("data_renamed/")
+image_Loader = ImageLoader(path="model/data_renamed/")
+# image_Loader.rename("model/data_renamed/")
+# exit()
 
 
 
@@ -18,7 +19,7 @@ images, filenames = image_Loader.load()
 preprocessing = OpenCvPreprocessing(images)
 images = preprocessing.preprocess()
 
-labels = load_labels_from_annotation_file("project-1-at-2024-12-23-22-37-9b90e95a.json", filenames)
+labels = load_labels_from_annotation_file("model/project-1-at-2024-12-28-13-38-0d340661.json", filenames)
 
 # images = (images * IPreprocessing.NORMALIZATION).astype("uint8")
 # for image, filename in zip(images, filenames):
@@ -45,10 +46,10 @@ train_x = (train_x * IPreprocessing.NORMALIZATION).astype("uint8")
 test_x = (test_x * IPreprocessing.NORMALIZATION).astype("uint8")
 
 
-train_labels_input = "test/train_labels"
-train_images_input = "test/train_images"
-test_labels_input = "test/test_labels"
-test_images_input = "test/test_images"
+train_labels_input = "model/test/train_labels"
+train_images_input = "model/test/train_images"
+test_labels_input = "model/test/test_labels"
+test_images_input = "model/test/test_images"
 
 print("saving images")
 for index, image in enumerate(train_x):

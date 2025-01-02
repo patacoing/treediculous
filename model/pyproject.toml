@@ -1,20 +1,20 @@
 [tool.poetry]
-name = "treediculous"
-version = "0.4.0"
+name = "model"
+version = "0.1.0"
 description = ""
 authors = ["patacoing <romain.lefebvre1104@gmail.com>"]
-readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.10"
-numpy = "1.26.2"
-opencv-python-headless = "^4.10.0.84"
-pillow = "^11.0.0"
-scikit-learn = "^1.6.0"
 azure-ai-ml = "^1.23.0"
 azure-identity = "^1.19.0"
-keras = "^3.7.0"
 tensorflow = "2.16.2"
+numpy = "1.26.2"
+keras = "^3.7.0"
+scikit-learn = "^1.6.0"
+pillow = "^11.1.0"
+opencv-python-headless = "^4.10.0.84"
 
 [tool.poetry.group.macos]
 optional = true
@@ -23,16 +23,11 @@ optional = true
 tensorflow-macos = "^2.16.2"
 tensorflow-metal = "^1.1.0"
 
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3.4"
-matplotlib = "^3.10.0"
-
-[tool.poetry.group.api]
+[tool.poetry.group.dev]
 optional = true
 
-[tool.poetry.group.api.dependencies]
-fastapi = {extras = ["standard"], version = "^0.115.6"}
+[tool.poetry.group.dev.dependencies]
+matplotlib = "^3.10.0"
 
 [build-system]
 requires = ["poetry-core"]

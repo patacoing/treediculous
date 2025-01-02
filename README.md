@@ -34,3 +34,27 @@ label-studio
 
 - API : FastAPI
 - Frontend : React
+- Deployment : Docker, Azure, Github Actions, Terraform
+- MLOps : AzureML
+
+## Docker images
+
+Docker images are available at https://github.com/patacoing/treediculous/pkgs/container/treediculous
+
+- API : treediculous:api-*version*
+
+It contains the FastAPI app and the model to classify the trees.
+
+- Frontend : treediculous:web-*version*
+
+It contains the React app to display the predictions as well as Caddy.
+
+- ML Pipeline environment : treediculous:pipeline
+
+It contains the environment to run the ML pipeline in azure
+
+## Structure
+
+- api : FastAPI app to infer the model
+- webapp : React app to call the backend
+- model : azureml pipeline, model training

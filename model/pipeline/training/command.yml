@@ -23,8 +23,7 @@ outputs:
 
 environment:
   name: train_environment
-  build:
-    path: ../../
+  image: ghcr.io/patacoing/treediculous:pipeline
 
 code: ../../
 command: >-

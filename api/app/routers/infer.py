@@ -3,8 +3,8 @@ import numpy as np
 from PIL import Image
 from fastapi import APIRouter, UploadFile, Depends
 
-from app.model import get_model, Model
-from app.schemas.response import ResponseSchemas, Classification
+from model.app.model import get_model, Model
+from api.app.schemas.response import ResponseSchemas, Classification
 
 
 router = APIRouter()
