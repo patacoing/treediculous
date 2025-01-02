@@ -82,10 +82,10 @@ jobs:
         id: terraform_plan
         working-directory: deployment
         run: |
-          terraform plan -no-color > tfplan
+          terraform plan -no-color -out=tfplan > tfplantxt
           {
             echo "plan<<EOF"
-            cat tfplan
+            cat tfplantxt
             echo "EOF"
           } >> $GITHUB_OUTPUT
 
