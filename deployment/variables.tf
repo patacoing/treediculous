@@ -16,12 +16,6 @@ variable "location" {
   default     = "northeurope"
 }
 
-variable "subscription_id" {
-  description = "The subscription id to use."
-  type        = string
-  sensitive   = true
-}
-
 variable "api_version" {
   description = "The api tag to deploy."
   type        = string
