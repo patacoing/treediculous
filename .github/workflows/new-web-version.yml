@@ -83,7 +83,11 @@ jobs:
         working-directory: deployment
         run: |
           terraform plan -no-color > tfplan
-          echo "plan=$(cat tfplan)" >> $GITHUB_OUTPUT
+          {
+            echo "plan<<EOF"
+            cat tfplan
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
 
       - uses: trstringer/manual-approval@v1
         with:
