@@ -6,6 +6,8 @@ This project aims to classify Xmas trees. The dataset is composed of images
 of Xmas trees retrieved from the internet, reddit, facebook groups, ...
 With treediculous, you'll be able to get a **real** opinion on your Xmas tree.
 
+The website is available at https://treediculous.fr
+
 ## Disclaimer
 
 The resulting predictions are not meant to be taken seriously. The fact that defining
