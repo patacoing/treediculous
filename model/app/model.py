@@ -66,17 +66,3 @@ class Model:
         prediction = self.model.predict(image_preprocessed.reshape(1, 224, 224, 3), verbose=verbose)[0][0]
 
         return prediction, self.labels[int(prediction > 0.5)]
-
-
-model = Model(["ugly", "nice"])
-model_path = Path(__file__).resolve().parent / "model" / "treediculous.keras"
-if model_path.exists():
-    model.load(model_path)
-else:
-    print("Model not found")
-
-def get_model() -> Model:
-    return model
-
-def get_labels() -> list[str]:
-    return model.labels

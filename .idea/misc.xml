@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Poetry (treediculous)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Poetry (treediculous-model)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Poetry (treediculous-api)" project-jdk-type="Python SDK" />
 </project>

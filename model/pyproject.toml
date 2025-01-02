@@ -3,7 +3,10 @@ name = "model"
 version = "0.1.0"
 description = ""
 authors = ["patacoing <romain.lefebvre1104@gmail.com>"]
-package-mode = false
+package-mode = true
+packages = [
+    { include = "*" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
