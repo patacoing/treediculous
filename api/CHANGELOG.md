@@ -36,6 +36,16 @@
 - **ci-cd**: can't use env var in environment
 - **deployment**: fixed dockerfiles, added tailwind
 
+## api-0.4.2 (2025-01-02)
+
+### Fix
+
+- **ci**: fetch all tags
+
+### Refactor
+
+- changed structure
+
 ## api-0.4.1 (2025-01-02)
 
 ### Fix
