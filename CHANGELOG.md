@@ -36,6 +36,24 @@
 - **ci-cd**: can't use env var in environment
 - **deployment**: fixed dockerfiles, added tailwind
 
+## api-0.4.0 (2025-01-02)
+
+### Feat
+
+- **deployment**: added terraform and https
+- icon, ads header
+
+### Fix
+
+- **ci**: multine line env var
+- **ci**: tfplan file
+- **ci**: multiline output
+- **ci**: put vars into env
+- **ci**: checkout
+- **ci**: checkout
+- **ci**: set working directory
+- **deployment**: copy public to docker image
+
 ## api-0.3.2 (2024-12-26)
 
 ### Feat
