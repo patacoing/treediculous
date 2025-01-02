@@ -58,6 +58,10 @@ jobs:
           DOWNLOAD_PATH: "../../api/app"
         run: ./run_download_model.sh latest ${{ env.AZURE_RESOURCE_GROUP }} ${{ env.AZURE_WORKSPACE }} ${{ env.AZURE_LOCATION }} ${{ secrets.AZURE_SUBSCRIPTION_ID }} ${{ env.DOWNLOAD_PATH }}
 
+      - name: Install dependencies
+        working-directory: api
+        run: poetry install
+
       - name: Push docker image
         uses: docker/build-push-action@v6
         with:
