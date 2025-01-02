@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "treediculous"
-version = "0.4.0"
+version = "0.4.1"
 description = ""
 authors = ["patacoing <romain.lefebvre1104@gmail.com>"]
 package-mode = false
