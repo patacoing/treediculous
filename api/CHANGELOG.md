@@ -36,6 +36,12 @@
 - **ci-cd**: can't use env var in environment
 - **deployment**: fixed dockerfiles, added tailwind
 
+## api-0.4.4 (2025-01-02)
+
+### Fix
+
+- **ci**: use fetch-depth instead of ref
+
 ## api-0.4.3 (2025-01-02)
 
 ### Fix
