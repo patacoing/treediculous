@@ -36,6 +36,12 @@
 - **ci-cd**: can't use env var in environment
 - **deployment**: fixed dockerfiles, added tailwind
 
+## api-0.4.3 (2025-01-02)
+
+### Fix
+
+- **api**: removed group deps in dockerfile
+
 ## api-0.4.2 (2025-01-02)
 
 ### Fix
