@@ -44,7 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          ref: ${{ github.ref_name }}
           token: ${{ secrets.GIT_TOKEN }}
 
       - name: Get api version
