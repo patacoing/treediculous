@@ -6,6 +6,7 @@ This document provides a detailed description of the Terraform variables used in
 
 | Name | Version |
 |------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | 1.5.7 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | 4.14.0 |
 | <a name="requirement_ovh"></a> [ovh](#requirement\_ovh) | 1.4.0 |
 
@@ -45,7 +46,6 @@ No modules.
 | <a name="input_ovh_application_secret"></a> [ovh\_application\_secret](#input\_ovh\_application\_secret) | Ovh application secret to use. | `string` | n/a | yes |
 | <a name="input_ovh_consumer_key"></a> [ovh\_consumer\_key](#input\_ovh\_consumer\_key) | Ovh consumer key to use. | `string` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The name of the resource group in which to create the resources. | `string` | `"treediculous-grp"` | no |
-| <a name="input_subscription_id"></a> [subscription\_id](#input\_subscription\_id) | The subscription id to use. | `string` | n/a | yes |
 | <a name="input_web_version"></a> [web\_version](#input\_web\_version) | The web tag to deploy. | `string` | n/a | yes |
 | <a name="input_workspace_name"></a> [workspace\_name](#input\_workspace\_name) | The name of the azureml workspace. | `string` | `"treediculous-ml-grp"` | no |
 
