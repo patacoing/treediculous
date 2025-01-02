@@ -57,15 +57,13 @@ jobs:
           echo "TF_VAR_ovh_consumer_key=${{ secrets.OVH_CONSUMER_KEY }}" >> $GITHUB_ENV
 
       - name: Terraform Init
-        working-directory: deployment
-        run: |
-          cd ${{ inputs.working-directory }}
-          terraform init
+        working-directory: ${{ inputs.working-directory }}
+        run: terraform init
 
       - name: Terraform Plan
         id: terraform_plan
+        working-directory: ${{ inputs.working-directory }}
         run: |
-          cd ${{ inputs.working-directory }}
           terraform plan -no-color -out=tfplan > tfplantxt
           {
           echo "plan<<EOF"
@@ -83,5 +81,5 @@ jobs:
           exclude-workflow-initiator-as-approver: false
 
       - name: Terraform Apply
-        working-directory: deployment
+        working-directory: ${{ inputs.working-directory }}
         run: terraform apply -auto-approve tfplan
