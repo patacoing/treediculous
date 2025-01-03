@@ -23,6 +23,7 @@ on:
 jobs:
   tflint:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
       - uses: actions/checkout@v4
         with:
