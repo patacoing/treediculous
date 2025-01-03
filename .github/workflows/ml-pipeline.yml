@@ -1,8 +1,7 @@
 name: ML Pipeline
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+
 
 env:
   AZURE_RESOURCE_GROUP: "treediculous-grp"
@@ -16,7 +15,6 @@ permissions:
 
 jobs:
   ml-pipeline:
-    if: "!startsWith(github.event.head_commit.message, 'bump:')"
     runs-on: ubuntu-latest
     environment: treediculous
 
