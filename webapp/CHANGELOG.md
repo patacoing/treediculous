@@ -1,3 +1,24 @@
+## web-0.7.0 (2025-01-03)
+
+### Feat
+
+- **web**: added ads.txt in public/
+
+### Fix
+
+- **ci**: use working directory
+- **ci**: use fetch-depth instead of ref
+- **api**: removed group deps in dockerfile
+- **ci**: fetch all tags
+- use model/ as a package
+- install deps for api
+- **ci**: fetch all tags
+- **ci**: multine line env var
+
+### Refactor
+
+- changed structure
+
 ## web-0.6.6 (2025-01-02)
 
 ### Fix
