@@ -1,3 +1,9 @@
+## web-0.7.1 (2025-01-03)
+
+### Fix
+
+- **ci**: added environment in reusable workflow
+
 ## web-0.7.0 (2025-01-03)
 
 ### Feat
