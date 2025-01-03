@@ -1,3 +1,9 @@
+## web-0.7.2 (2025-01-03)
+
+### Fix
+
+- **ci**: used fetch-depth 0 to get all tags
+
 ## web-0.7.1 (2025-01-03)
 
 ### Fix
