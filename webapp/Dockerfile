@@ -11,6 +11,7 @@ COPY index.html index.html
 COPY vite.config.js vite.config.js
 COPY postcss.config.js postcss.config.js
 COPY tailwind.config.js tailwind.config.js
+COPY public/ads.txt ads.txt
 RUN npm run build
 
 FROM caddy:latest
