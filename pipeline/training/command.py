@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-from app.model import Model
+from model.model import Model
 
 
 parser = argparse.ArgumentParser("training")

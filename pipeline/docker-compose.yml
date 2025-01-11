@@ -1,0 +1,22 @@
+services:
+  preprocessing:
+    image: ghcr.io/patacoing/treediculous:pipeline
+    volumes:
+      - ./preprocessing:/app
+      - ./data_renamed:/data_renamed
+
+    command: tail -f /dev/null
+
+  splitting:
+    image: treediculous-pipepline
+    volumes:
+      - ./splitting:/app
+
+    command: tail -f /dev/null
+
+  training:
+    image: treediculous-pipepline
+    volumes:
+      - ./training:/app
+
+    command: tail -f /dev/null

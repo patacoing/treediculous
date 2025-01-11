@@ -1,8 +1,13 @@
+print("coucou")
 import argparse
 from PIL import Image
 
-from app.image_loader import ImageLoader
-from app.preprocessing import OpenCvPreprocessing, IPreprocessing
+print("coucou")
+
+from model.image_loader import ImageLoader
+from model.preprocessing import OpenCvPreprocessing, IPreprocessing
+
+print("coucou")
 
 
 parser = argparse.ArgumentParser("preprocess")

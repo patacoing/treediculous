@@ -21,13 +21,11 @@ outputs:
   model_output:
     type: uri_folder
 
-environment:
-  name: train_environment
-  image: ghcr.io/patacoing/treediculous:pipeline
+environment: azureml:treediculous_environment:1
 
-code: ../../
+code: ./
 command: >-
-  python -m pipeline.training.command
+  python command.py
   --train_images_input ${{inputs.train_images_input}}
   --train_labels_input ${{inputs.train_labels_input}}
   --test_images_input ${{inputs.test_images_input}}

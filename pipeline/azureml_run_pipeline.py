@@ -3,7 +3,7 @@ from pathlib import Path
 from azure.identity import DefaultAzureCredential, InteractiveBrowserCredential
 from azure.ai.ml import MLClient, Input, Output, load_component
 from azure.ai.ml.dsl import pipeline
-from azure.ai.ml.entities import Model
+from azure.ai.ml.entities import Model, Workspace, Environment
 from azure.ai.ml.constants import AssetTypes
 from azure.ai.ml.entities import AmlCompute
 import uuid
@@ -39,6 +39,14 @@ ml_client = MLClient(
     resource_group_name=resource_group_name,
     workspace_name=workspace_name,
 )
+
+environment = Environment(
+    name="treediculous_environment",
+    image="ghcr.io/patacoing/treediculous:pipeline",
+    description="Environment for treediculous pipeline",
+)
+
+ml_client.environments.create_or_update(environment)
 
 # Retrieve an already attached Azure Machine Learning Compute.
 cluster_name = "simple-cpu-low"
@@ -139,7 +147,7 @@ output_data = {
 }
 
 
-app_path = Path(__file__).parent.resolve().parent / "app/model"
+app_path = Path(__file__).parent.resolve().parent / "api/app/model"
 app_path.mkdir(exist_ok=True)
 
 with open(app_path / "model_version", "w") as f:

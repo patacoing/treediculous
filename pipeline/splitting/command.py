@@ -1,8 +1,8 @@
 import argparse
 from PIL import Image
 
-from app.image_loader import ImageLoader, load_labels_from_annotation_file
-from app.splitter import Splitter
+from model.image_loader import ImageLoader, load_labels_from_annotation_file
+from model.splitter import Splitter
 
 
 parser = argparse.ArgumentParser("splitting")

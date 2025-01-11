@@ -15,12 +15,10 @@ outputs:
   images_output:
     type: uri_folder
 
-environment:
-  name: preprocess_environment
-  image: ghcr.io/patacoing/treediculous:pipeline
+environment: azureml:treediculous_environment:1
 
-code: ../../
+code: ./
 command: >-
-  python -m pipeline.preprocessing.command
+  python command.py
   --images_input ${{inputs.images_input}}
   --images_output ${{outputs.images_output}}

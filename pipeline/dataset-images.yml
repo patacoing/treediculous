@@ -8,4 +8,4 @@ $schema: https://azuremlschemas.azureedge.net/latest/data.schema.json
 type: uri_folder
 name: treediculous-images
 description: Treediculous image dataset
-path: ../data_renamed/
+path: ../model/data_renamed/
