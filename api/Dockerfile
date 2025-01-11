@@ -2,28 +2,30 @@ FROM python:3.10-slim-bullseye AS base
 
 FROM base AS builder
 
-WORKDIR /app
+WORKDIR /api
+RUN mkdir -p /model
 
 ENV PATH=/root/.local/bin:$PATH \
-    POETRY_VERSION=1.8.3
+    POETRY_VERSION=1.8.3 \
+    POETRY_NO_INTERACTION=1
 
 RUN pip install --user "poetry==${POETRY_VERSION}"
-RUN python -m venv /venv
+RUN poetry config virtualenvs.in-project true
 
-COPY poetry.lock pyproject.toml ./
+COPY api/poetry.lock api/pyproject.toml ./
+COPY model /model
 
-RUN . /venv/bin/activate && poetry install -n --sync --no-directory --no-root && poetry run pip install setuptools
-
+RUN poetry install --sync --no-cache
 
 FROM base AS final
 RUN useradd -r newuser
 USER newuser
-ENV PATH=/venv/bin:${PATH}
+ENV PATH=/api/.venv/bin:${PATH}
 
-WORKDIR /app
+WORKDIR /api
 
-COPY --from=builder /venv /venv
-COPY app ./app
+COPY --from=builder /api/.venv/ /api/.venv/
+COPY api/ .
 
 EXPOSE 8000
 
