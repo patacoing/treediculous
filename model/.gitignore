@@ -5,3 +5,5 @@ test/
 graph.png
 graph_accuracy.png
 .DS_Store
+dist/
+project*.json

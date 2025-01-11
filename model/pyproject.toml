@@ -4,20 +4,15 @@ version = "0.1.0"
 description = ""
 authors = ["patacoing <romain.lefebvre1104@gmail.com>"]
 package-mode = true
-packages = [
-    { include = "*" }
-]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-azure-ai-ml = "^1.23.0"
-azure-identity = "^1.19.0"
-tensorflow = "2.16.2"
-numpy = "1.26.2"
 keras = "^3.7.0"
 scikit-learn = "^1.6.0"
 pillow = "^11.1.0"
 opencv-python-headless = "^4.10.0.84"
+numpy = "1.26.2"
+tensorflow = "2.16.2"
 
 [tool.poetry.group.macos]
 optional = true
