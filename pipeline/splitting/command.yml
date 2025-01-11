@@ -1,0 +1,36 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+type: command
+
+name: label_split_data
+display_name: Label Split Data
+description: Split data into train and test sets
+version: 0.0.1
+is_deterministic: true
+
+inputs:
+  labels_input:
+    type: uri_folder
+  images_input:
+    type: uri_folder
+
+outputs:
+  train_labels_output:
+    type: uri_folder
+  train_images_output:
+    type: uri_folder
+  test_labels_output:
+    type: uri_folder
+  test_images_output:
+    type: uri_folder
+
+environment: azureml:treediculous_environment:1
+
+code: ./
+command: >-
+  python command.py
+  --labels_input ${{inputs.labels_input}}
+  --images_input ${{inputs.images_input}}
+  --train_labels_output ${{outputs.train_labels_output}}
+  --train_images_output ${{outputs.train_images_output}}
+  --test_labels_output ${{outputs.test_labels_output}}
+  --test_images_output ${{outputs.test_images_output}}

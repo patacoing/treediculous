@@ -1,9 +1,0 @@
-data*
-test/
-graph.png
-project-*
-act.secrets
-graph*
-.DS_Store
-pyproject.toml
-poetry.lock

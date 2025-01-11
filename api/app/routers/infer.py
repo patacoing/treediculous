@@ -5,8 +5,8 @@ import numpy as np
 from PIL import Image
 from fastapi import APIRouter, UploadFile, Depends
 
-from model.app.model import Model
-from api.app.schemas.response import ResponseSchemas, Classification
+from model.model import Model
+from app.schemas.response import ResponseSchemas, Classification
 
 
 router = APIRouter()

@@ -1,0 +1,24 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+type: command
+
+name: preprocess
+display_name: Preprocess
+description: Preprocess images
+version: 0.0.1
+is_deterministic: true
+
+inputs:
+  images_input:
+    type: uri_folder
+
+outputs:
+  images_output:
+    type: uri_folder
+
+environment: azureml:treediculous_environment:1
+
+code: ./
+command: >-
+  python command.py
+  --images_input ${{inputs.images_input}}
+  --images_output ${{outputs.images_output}}
