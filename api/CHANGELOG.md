@@ -36,6 +36,22 @@
 - **ci-cd**: can't use env var in environment
 - **deployment**: fixed dockerfiles, added tailwind
 
+## api-0.5.0 (2025-01-11)
+
+### Feat
+
+- **web**: added ads.txt in public/
+
+### Fix
+
+- **ci**: set ml pipeline to be runnable
+- **ci**: used fetch-depth 0 to get all tags
+- **ci**: added environment in reusable workflow
+
+### Refactor
+
+- **model**: refactored package to work properly
+
 ## api-0.4.5 (2025-01-02)
 
 ### Fix
