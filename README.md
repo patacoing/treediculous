@@ -60,3 +60,10 @@ It contains the environment to run the ML pipeline in azure
 - api : FastAPI app to infer the model
 - webapp : React app to call the backend
 - model : azureml pipeline, model training
+
+## TODO:
+
+Need to seperate containers in 2 container groups:
+- Caddy
+- API + Frontend
+because when we deploy a container, the entire group is recreated so caddy always tries getting a certificate
